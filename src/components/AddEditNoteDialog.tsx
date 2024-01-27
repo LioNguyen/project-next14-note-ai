@@ -70,9 +70,9 @@ export default function AddEditNoteDialog({
 
       router.refresh();
       setOpen(false);
-      toast("Successfully!");
+      toast.success("Successfully!");
     } catch (err: any) {
-      toast("Something went wrong. Please try again.", {
+      toast.error("Something went wrong. Please try again.", {
         type: "error",
       });
       throw new Error(err);
@@ -90,9 +90,9 @@ export default function AddEditNoteDialog({
 
       router.refresh();
       setOpen(false);
-      toast("Delete Successfully!");
+      toast.success("Delete Successfully!");
     } catch (err: any) {
-      toast("Something went wrong. Please try again.", {
+      toast.error("Something went wrong. Please try again.", {
         type: "error",
       });
       throw new Error(err);
