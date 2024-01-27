@@ -93,7 +93,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
           <Input
             value={input}
             onChange={handleInputChange}
-            placeholder="Say something..."
+            placeholder="How many notes are there?..."
             ref={inputRef}
           />
           <Button type="submit">Send</Button>

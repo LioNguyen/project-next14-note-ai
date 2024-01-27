@@ -4,6 +4,9 @@ import { Note } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
+import { createAxios } from "@/utils/api";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +37,7 @@ export default function AddEditNoteDialog({
   setOpen,
   noteToEdit,
 }: AddEditNoteDialogProps) {
+  const axios = createAxios();
   const [deleteInProgress, setDeleteInProgress] = useState(false);
 
   const router = useRouter();
@@ -49,27 +53,29 @@ export default function AddEditNoteDialog({
   async function onSubmit(input: CreateNoteSchema) {
     try {
       if (noteToEdit) {
-        const response = await fetch("/api/notes", {
-          method: "PUT",
-          body: JSON.stringify({
-            id: noteToEdit.id,
-            ...input,
-          }),
+        const response = await axios.put("/api/notes", {
+          id: noteToEdit.id,
+          ...input,
         });
-        if (!response.ok) throw Error("Status code: " + response.status);
+        if (response.status !== 200) {
+          throw Error("Status code: " + response.status);
+        }
       } else {
-        const response = await fetch("/api/notes", {
-          method: "POST",
-          body: JSON.stringify(input),
-        });
-        if (!response.ok) throw Error("Status code: " + response.status);
+        const response = await axios.post("/api/notes", input);
+        if (response.status !== 201) {
+          throw Error("Status code: " + response.status);
+        }
         form.reset();
       }
+
       router.refresh();
       setOpen(false);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
+      toast("Successfully!");
+    } catch (err: any) {
+      toast("Something went wrong. Please try again.", {
+        type: "error",
+      });
+      throw new Error(err);
     }
   }
 
@@ -77,18 +83,19 @@ export default function AddEditNoteDialog({
     if (!noteToEdit) return;
     setDeleteInProgress(true);
     try {
-      const response = await fetch("/api/notes", {
-        method: "DELETE",
-        body: JSON.stringify({
-          id: noteToEdit.id,
-        }),
-      });
-      if (!response.ok) throw Error("Status code: " + response.status);
+      const response = await axios.delete(`/api/notes/${noteToEdit.id}`);
+      if (response.status !== 200) {
+        throw Error("Status code: " + response.status);
+      }
+
       router.refresh();
       setOpen(false);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
+      toast("Delete Successfully!");
+    } catch (err: any) {
+      toast("Something went wrong. Please try again.", {
+        type: "error",
+      });
+      throw new Error(err);
     } finally {
       setDeleteInProgress(false);
     }

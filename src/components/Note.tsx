@@ -20,8 +20,8 @@ export default function Note({ note }: NoteProps) {
 
   const wasUpdated = note.updatedAt > note.createdAt;
 
-  const createdUpdatedAtTimestamp = (
-    wasUpdated ? note.updatedAt : note.createdAt
+  const createdUpdatedAtTimestamp = new Date(
+    wasUpdated ? note.updatedAt : note.createdAt,
   ).toDateString();
 
   return (
