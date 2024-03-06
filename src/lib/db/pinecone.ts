@@ -11,4 +11,5 @@ const pinecone = new Pinecone({
   apiKey,
 });
 
+// Get Index name on app.pinecone.io
 export const notesIndex = pinecone.Index("project-nextjs-note-ai");
